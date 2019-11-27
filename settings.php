@@ -30,6 +30,10 @@ if ($ADMIN->fulltree) {
     //--- settings ------------------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_liqpay_settings', '', get_string('pluginname_desc', 'enrol_liqpay')));
 
+    $settings->add(new admin_setting_configtext('enrol_liqpay/publickey', get_string('publickey', 'enrol_liqpay'), get_string('businessemail_desc', 'enrol_liqpay'), '', PARAM_ALPHANUMEXT));
+
+    $settings->add(new admin_setting_configtext('enrol_liqpay/privatekey', get_string('privatekey', 'enrol_liqpay'), get_string('businessemail_desc', 'enrol_liqpay'), '', PARAM_ALPHANUMEXT));
+
     $settings->add(new admin_setting_configtext('enrol_liqpay/liqpaybusiness', get_string('businessemail', 'enrol_liqpay'), get_string('businessemail_desc', 'enrol_liqpay'), '', PARAM_EMAIL));
 
     $settings->add(new admin_setting_configcheckbox('enrol_liqpay/mailstudents', get_string('mailstudents', 'enrol_liqpay'), '', 0));
