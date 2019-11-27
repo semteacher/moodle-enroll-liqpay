@@ -20,7 +20,7 @@
  * LIQPAY API       https://www.liqpay.ua/documentation/en
  *
  */
-
+namespace enrol_liqpay\liqpaysdk;
 /**
  * Payment method liqpay process
  *

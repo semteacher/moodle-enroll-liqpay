@@ -36,7 +36,7 @@ class enrol_liqpay_plugin extends enrol_plugin {
     public function get_currencies() {
         // See https://www.liqpay.com/cgi-bin/webscr?cmd=p/sell/mc/mc_intro-outside,
         // 3-character ISO-4217: https://cms.liqpay.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_currency_codes
-        $codes = array('UAH', 'EUR', 'USD', 'RUB', 'RUR');
+        $codes = array('UAH', 'EUR', 'USD', 'RUB');
         $currencies = array();
         foreach ($codes as $c) {
             $currencies[$c] = new lang_string($c, 'core_currencies');
@@ -217,7 +217,24 @@ class enrol_liqpay_plugin extends enrol_plugin {
                 $usercity        = $USER->city;
                 $instancename    = $this->get_instance_name($instance);
 
-                include($CFG->dirroot.'/enrol/liqpay/enrol.html');
+                $public_key = get_config('enrol_liqpay', 'publickey');
+                $private_key = get_config('enrol_liqpay', 'privatekey');
+                $liqpay = new \enrol_liqpay\liqpaysdk\LiqPay($public_key, $private_key);
+                $formhtml = $liqpay->cnb_form(array(
+                                            'action'         => 'pay',
+                                            'amount'         => $cost,
+                                            'currency'       => $instance->currency,
+                                            'description'    => $userfullname.' for access to '.$coursefullname,
+                                            'order_id'       => 'order_id_1',
+                                            'version'        => '3',
+                                            'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php?id='.$course->id,
+                                            'server_url'     => $CFG->wwwroot.'/enrol/liqpay/ipn.php'
+                                            ));
+                echo '<div class="mdl-align"><p>'.get_string('paymentrequired').'</p>';
+                echo '<p><strong>'.$instancename.'</strong></p>';
+                echo '<p><b>'.get_string('cost').": $instance->currency $localisedcost".'</b></p>';
+                echo '<p>'.$formhtml.'</p>';
+                echo '</div>';
             }
 
         }
