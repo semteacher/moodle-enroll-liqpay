@@ -25,8 +25,91 @@
 require("../../config.php");
 require_once("$CFG->dirroot/enrol/liqpay/lib.php");
 
-$id = required_param('id', PARAM_INT);
+// Make sure we are enabled in the first place.
+if (!enrol_is_enabled('liqpay')) {
+    http_response_code(503);
+    throw new moodle_exception('errdisabled', 'enrol_liqpay');
+}
+$f = fopen("post.txt", "w");
+fwrite($f, print_r($_POST, true));
+fclose($f);
 
+/// Keep out casual intruders
+if (empty($_POST)) {
+    http_response_code(400);
+    throw new moodle_exception('invalidrequest', 'core_error');
+}
+
+$id = required_param('id', PARAM_INT);
+var_dump($id);
+
+$public_key = get_config('enrol_liqpay', 'publickey');
+$private_key = get_config('enrol_liqpay', 'privatekey');
+$liqpay = new \enrol_liqpay\liqpaysdk\LiqPay($public_key, $private_key);
+//var_dump(base64_decode($_POST['data']));
+
+$pdata = new stdClass();
+//error_log('LiqPay ipn BEGIN:');
+foreach ($_POST as $key => $value) {
+//error_log(print_r($key, true));
+//error_log(print_r($value, true));
+    if ($key !== clean_param($key, PARAM_ALPHANUMEXT)) {
+        throw new moodle_exception('invalidrequest', 'core_error', '', null, $key);
+    }
+    //$data->$key = fix_utf8($value);
+    //$data->$key = base64_decode($value);
+    $pdata->$key = $value;
+}
+
+var_dump($pdata);
+//$pdata->data = base64_decode($pdata->data);
+//var_dump('base64 decoded data:');
+//var_dump($pdata->data);
+//$sign = base64_encode( sha1( $private_key . $pdata->data . $private_key , 1 ));
+//$sign2 = sha1( base64_encode( $private_key . $pdata->data . $private_key) , 1 );
+//$sign3 = sha1( base64_encode( $private_key . $pdata->data . $private_key) );
+//var_dump($pdata->data);
+//var_dump($sign);
+//var_dump($sign2);
+//var_dump($sign3);
+$pdata->data = $liqpay->decode_params($pdata->data);
+//$reencoded = base64_encode(json_encode($pdata->data));
+$sign = $liqpay->cnb_signature($pdata->data);
+var_dump($sign);
+//if ($sign != $data->signature) {
+//    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
+//}
+
+//$pdata->data = json_decode($pdata->data);
+
+var_dump('json decoded data:');
+var_dump($pdata->data);
+
+if (empty($pdata->data['order_id'])) {
+    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Missing request param: order_id');
+}
+
+$order_id = explode('-', $pdata->data['order_id']);
+//unset($data->custom);
+
+if (empty($order_id) || count($order_id) < 3) {
+    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid value of the request param: order_id');
+}
+
+$data = new stdClass();
+$data->userid           = (int)$order_id[0];
+$data->courseid         = (int)$order_id[1];
+$data->instanceid       = (int)$order_id[2];
+$data->payment_gross    = $pdata->data['amount_credit'];
+$data->payment_currency = $pdata->data['currency_credit'];
+$data->timeupdated      = time();
+var_dump($data);
+$user = $DB->get_record("user", array("id" => $data->userid), "*", MUST_EXIST);
+$course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EXIST);
+$context = context_course::instance($course->id, MUST_EXIST);
+
+
+//var_dump($data);
 if (!$course = $DB->get_record("course", array("id"=>$id))) {
     redirect($CFG->wwwroot);
 }

@@ -225,11 +225,14 @@ class enrol_liqpay_plugin extends enrol_plugin {
                                             'amount'         => $cost,
                                             'currency'       => $instance->currency,
                                             'description'    => $userfullname.' for access to '.$coursefullname,
-                                            'order_id'       => 'order_id_1',
+                                            'order_id'       => "{$USER->id}-{$course->id}-{$instance->id}-018",
                                             'version'        => '3',
                                             'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php?id='.$course->id,
-                                            'server_url'     => $CFG->wwwroot.'/enrol/liqpay/ipn.php'
+                                            'sender_first_name' => $userfirstname, 
+                                            'sender_last_name'  => $userlastname
                                             ));
+                                            //'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php?id='.$course->id,
+                                            //'server_url'     => $CFG->wwwroot.'/enrol/liqpay/ipn.php',
                 echo '<div class="mdl-align"><p>'.get_string('paymentrequired').'</p>';
                 echo '<p><strong>'.$instancename.'</strong></p>';
                 echo '<p><b>'.get_string('cost').": $instance->currency $localisedcost".'</b></p>';
