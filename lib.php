@@ -225,7 +225,7 @@ class enrol_liqpay_plugin extends enrol_plugin {
                                             'amount'         => $cost,
                                             'currency'       => $instance->currency,
                                             'description'    => $userfullname.' for access to '.$coursefullname,
-                                            'order_id'       => "{$USER->id}-{$course->id}-{$instance->id}-018",
+                                            'order_id'       => "{$USER->id}-{$course->id}-{$instance->id}-020",
                                             'version'        => '3',
                                             'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php?id='.$course->id,
                                             'sender_first_name' => $userfirstname, 

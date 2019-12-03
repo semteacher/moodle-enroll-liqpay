@@ -40,9 +40,6 @@ if (empty($_POST)) {
     throw new moodle_exception('invalidrequest', 'core_error');
 }
 
-$id = required_param('id', PARAM_INT);
-var_dump($id);
-
 $public_key = get_config('enrol_liqpay', 'publickey');
 $private_key = get_config('enrol_liqpay', 'privatekey');
 $liqpay = new \enrol_liqpay\liqpaysdk\LiqPay($public_key, $private_key);
@@ -61,7 +58,11 @@ foreach ($_POST as $key => $value) {
     $pdata->$key = $value;
 }
 
-var_dump($pdata);
+if (empty($pdata->data) || empty($pdata->signature)) {
+    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Missing LiqPay data or signature');
+}
+
+//var_dump($pdata);
 //$pdata->data = base64_decode($pdata->data);
 //var_dump('base64 decoded data:');
 //var_dump($pdata->data);
@@ -73,9 +74,10 @@ var_dump($pdata);
 //var_dump($sign2);
 //var_dump($sign3);
 $pdata->data = $liqpay->decode_params($pdata->data);
-//$reencoded = base64_encode(json_encode($pdata->data));
 $sign = $liqpay->cnb_signature($pdata->data);
+//$reencoded = base64_encode(json_encode($pdata->data));
 var_dump($sign);
+// TODO: verification of signature does not pass?? contact LiqPay support?
 //if ($sign != $data->signature) {
 //    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
 //}
@@ -87,6 +89,7 @@ var_dump($pdata->data);
 
 if (empty($pdata->data['order_id'])) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Missing request param: order_id');
+    
 }
 
 $order_id = explode('-', $pdata->data['order_id']);
@@ -96,17 +99,196 @@ if (empty($order_id) || count($order_id) < 3) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid value of the request param: order_id');
 }
 
+$id = required_param('id', PARAM_INT);
+var_dump($id);
+
 $data = new stdClass();
+$data->publickey        = $public_key; //<FIELD NAME="publickey"
 $data->userid           = (int)$order_id[0];
 $data->courseid         = (int)$order_id[1];
 $data->instanceid       = (int)$order_id[2];
-$data->payment_gross    = $pdata->data['amount_credit'];
-$data->payment_currency = $pdata->data['currency_credit'];
+$data->memo             = $pdata->data['description']; //TODO - fit DB
+$data->tax              = $pdata->data['commission_credit']; //TODO - fit DB
+$data->option_name1     = $pdata->data['amount_debit']; //TODO - fit DB
+$data->option_selection1_x = $pdata->data['currency_debit']; //TODO - fit DB
+$data->option_name2     = $pdata->data['paytype']; //TODO - fit DB
+$data->option_selection2_x = $pdata->data['action']; //TODO - fit DB
+$data->payment_status   = $pdata->data['status'];
+$data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
+$data->reason_code      = $pdata->data['acq_id']; //TODO - fit DB
+$data->txn_id           = $pdata->data['payment_id']; //==transaction_id
+$data->parent_txn_id    = $pdata->data['liqpay_order_id']; //TODO - fit DB
+$data->payment_type     = $pdata->data['type']; //TODO - fit DB
 $data->timeupdated      = time();
+//TODO: Need add fields:
+//create_date
+//err_code
+//err_decription
+//---not in db?--
+//$data->payment_gross    = $pdata->data['amount_credit']; //xx_credit == receiver
+//$data->payment_currency = $pdata->data['currency_credit'];
+$data->payment_gross    = $pdata->data['amount_debit'];
+$data->payment_currency = $pdata->data['currency_debit'];
+
+
+
 var_dump($data);
 $user = $DB->get_record("user", array("id" => $data->userid), "*", MUST_EXIST);
 $course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
+
+$PAGE->set_context($context);
+
+$plugin_instance = $DB->get_record("enrol", array("id" => $data->instanceid, "enrol" => "liqpay", "status" => 0), "*", MUST_EXIST);
+$plugin = enrol_get_plugin('liqpay');
+
+// TODO: perform second verification via LiqPay API?
+
+if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)) {
+    if ((strcmp($pdata->data["action"], "pay") == 0) && (strcmp($pdata->data["status"], "success") == 0)) { // VALID PAYMENT!
+
+        // If currency is incorrectly set then someone maybe trying to cheat the system
+
+        if ($pdata->data['currency_debit'] != $plugin_instance->currency) {
+            \enrol_liqpay\util::message_liqpay_error_to_admin(
+                "Currency does not match course settings, received (currency_debit): ".$pdata->data['currency_debit'],
+                $data);
+            //die;
+        }
+
+        // At this point we only proceed with a status of completed or pending with a reason of echeck
+
+        // Make sure this transaction doesn't exist already.
+        if ($existing = $DB->get_record("enrol_liqpay", array("txn_id" => $data->txn_id), "*", IGNORE_MULTIPLE)) {
+            \enrol_liqpay\util::message_liqpay_error_to_admin("Transaction $data->txn_id is being repeated!", $data);
+            die;
+        }
+
+        if (!$user = $DB->get_record('user', array('id'=>$data->userid))) {   // Check that user exists
+            \enrol_liqpay\util::message_liqpay_error_to_admin("User $data->userid doesn't exist", $data);
+            die;
+        }
+
+        if (!$course = $DB->get_record('course', array('id'=>$data->courseid))) { // Check that course exists
+            \enrol_liqpay\util::message_liqpay_error_to_admin("Course $data->courseid doesn't exist", $data);
+            die;
+        }
+
+        $coursecontext = context_course::instance($course->id, IGNORE_MISSING);
+
+        // Check that amount paid is the correct amount
+        if ( (float) $plugin_instance->cost <= 0 ) {
+            $cost = (float) $plugin->get_config('cost');
+        } else {
+            $cost = (float) $plugin_instance->cost;
+        }
+
+        // Use the same rounding of floats as on the enrol form.
+        $cost = format_float($cost, 2, false);
+
+        if ($data->payment_gross < $cost) {
+            \enrol_liqpay\util::message_liqpay_error_to_admin("Amount paid is not enough ($data->payment_gross < $cost))", $data);
+            die;
+        }
+
+        // Use the queried course's full name for the item_name field.
+        $data->item_name = $course->fullname; //<FIELD NAME="item_name"
+
+        // ALL CLEAR !
+
+        $DB->insert_record("enrol_liqpay", $data);
+
+        if ($plugin_instance->enrolperiod) {
+            $timestart = time();
+            $timeend   = $timestart + $plugin_instance->enrolperiod;
+        } else {
+            $timestart = 0;
+            $timeend   = 0;
+        }
+
+        // Enrol user
+        $plugin->enrol_user($plugin_instance, $user->id, $plugin_instance->roleid, $timestart, $timeend);
+
+        // Pass $view=true to filter hidden caps if the user cannot see them
+        if ($users = get_users_by_capability($context, 'moodle/course:update', 'u.*', 'u.id ASC',
+                                             '', '', '', '', false, true)) {
+            $users = sort_by_roleassignment_authority($users, $context);
+            $teacher = array_shift($users);
+        } else {
+            $teacher = false;
+        }
+
+        $mailstudents = $plugin->get_config('mailstudents');
+        $mailteachers = $plugin->get_config('mailteachers');
+        $mailadmins   = $plugin->get_config('mailadmins');
+        $shortname = format_string($course->shortname, true, array('context' => $context));
+
+
+        if (!empty($mailstudents)) {
+            $a = new stdClass();
+            $a->coursename = format_string($course->fullname, true, array('context' => $coursecontext));
+            $a->profileurl = "$CFG->wwwroot/user/view.php?id=$user->id";
+
+            $eventdata = new \core\message\message();
+            $eventdata->courseid          = $course->id;
+            $eventdata->modulename        = 'moodle';
+            $eventdata->component         = 'enrol_liqpay';
+            $eventdata->name              = 'liqpay_enrolment';
+            $eventdata->userfrom          = empty($teacher) ? core_user::get_noreply_user() : $teacher;
+            $eventdata->userto            = $user;
+            $eventdata->subject           = get_string("enrolmentnew", 'enrol', $shortname);
+            $eventdata->fullmessage       = get_string('welcometocoursetext', '', $a);
+            $eventdata->fullmessageformat = FORMAT_PLAIN;
+            $eventdata->fullmessagehtml   = '';
+            $eventdata->smallmessage      = '';
+            message_send($eventdata);
+
+        }
+
+        if (!empty($mailteachers) && !empty($teacher)) {
+            $a->course = format_string($course->fullname, true, array('context' => $coursecontext));
+            $a->user = fullname($user);
+
+            $eventdata = new \core\message\message();
+            $eventdata->courseid          = $course->id;
+            $eventdata->modulename        = 'moodle';
+            $eventdata->component         = 'enrol_liqpay';
+            $eventdata->name              = 'liqpay_enrolment';
+            $eventdata->userfrom          = $user;
+            $eventdata->userto            = $teacher;
+            $eventdata->subject           = get_string("enrolmentnew", 'enrol', $shortname);
+            $eventdata->fullmessage       = get_string('enrolmentnewuser', 'enrol', $a);
+            $eventdata->fullmessageformat = FORMAT_PLAIN;
+            $eventdata->fullmessagehtml   = '';
+            $eventdata->smallmessage      = '';
+            message_send($eventdata);
+        }
+
+        if (!empty($mailadmins)) {
+            $a->course = format_string($course->fullname, true, array('context' => $coursecontext));
+            $a->user = fullname($user);
+            $admins = get_admins();
+            foreach ($admins as $admin) {
+                $eventdata = new \core\message\message();
+                $eventdata->courseid          = $course->id;
+                $eventdata->modulename        = 'moodle';
+                $eventdata->component         = 'enrol_liqpay';
+                $eventdata->name              = 'liqpay_enrolment';
+                $eventdata->userfrom          = $user;
+                $eventdata->userto            = $admin;
+                $eventdata->subject           = get_string("enrolmentnew", 'enrol', $shortname);
+                $eventdata->fullmessage       = get_string('enrolmentnewuser', 'enrol', $a);
+                $eventdata->fullmessageformat = FORMAT_PLAIN;
+                $eventdata->fullmessagehtml   = '';
+                $eventdata->smallmessage      = '';
+                message_send($eventdata);
+            }
+        }
+    
+    } elseif (strcmp($pdata->data["status"], "success") == 0) {
+        
+    }
+}
 
 
 //var_dump($data);
@@ -114,8 +296,8 @@ if (!$course = $DB->get_record("course", array("id"=>$id))) {
     redirect($CFG->wwwroot);
 }
 
-$context = context_course::instance($course->id, MUST_EXIST);
-$PAGE->set_context($context);
+//$context = context_course::instance($course->id, MUST_EXIST);
+//$PAGE->set_context($context);
 
 require_login();
 
