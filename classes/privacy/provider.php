@@ -37,7 +37,8 @@ use core_privacy\local\request\writer;
 /**
  * Privacy Subsystem implementation for enrol_liqpay.
  *
- * @copyright  2018 Shamim Rezaie <shamim@moodle.com>
+ * @copyright  2018 Shamim Rezaie <shamim@moodle.com> (PayPal)
+ * @copyright  2019 Andrii Semenets <semteacher@gmail.com> (PayPal)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements

@@ -70,7 +70,7 @@ class enrol_liqpay_plugin extends enrol_plugin {
             break;
         }
         if ($found) {
-            return array(new pix_icon('icon', get_string('pluginname', 'enrol_liqpay'), 'enrol_liqpay'));
+            return array(new pix_icon('liqpay2x32', get_string('pluginname', 'enrol_liqpay'), 'enrol_liqpay'));
         }
         return array();
     }
