@@ -213,7 +213,7 @@ class provider implements
                 'commission_credit'   => $liqpayrecord->commission_credit,
                 'amount_debit'        => $liqpayrecord->amount_debit,
                 'currency_debit'      => $liqpayrecord->currency_debit,
-                'option_name2'        => $liqpayrecord->option_name2,
+                'paytype'             => $liqpayrecord->paytype,
                 'option_selection2_x' => $liqpayrecord->option_selection2_x,
                 'payment_status'      => $liqpayrecord->payment_status,
                 'pending_reason'      => $liqpayrecord->pending_reason,

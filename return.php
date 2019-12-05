@@ -111,8 +111,8 @@ $data->description       = $pdata->data['description'];
 $data->commission_credit = $pdata->data['commission_credit'];// commission from receiver
 $data->amount_debit      = $pdata->data['amount_debit'];     // payed by customer
 $data->currency_debit    = $pdata->data['currency_debit'];   // currency of customer's payment
+$data->paytype           = $pdata->data['paytype'];  // card, liqpay, privat24, masterpass, moment_part, cash, invoice, qr
 
-$data->option_name2     = $pdata->data['paytype']; //TODO - fit DB
 $data->option_selection2_x = $pdata->data['action']; //TODO - fit DB
 $data->payment_status   = $pdata->data['status'];
 $data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB

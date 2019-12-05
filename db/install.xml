@@ -15,13 +15,13 @@
         <FIELD NAME="commission_credit" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="amount_debit" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="currency_debit" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="paytype" TYPE="char" LENGTH="30" NOTNULL="true" SEQUENCE="false"/>
 
         <FIELD NAME="business" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="receiver_email" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="receiver_id" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="item_name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
 
-        <FIELD NAME="option_name2" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="option_selection2_x" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="payment_status" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="pending_reason" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
