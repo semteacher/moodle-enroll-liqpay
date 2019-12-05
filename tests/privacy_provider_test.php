@@ -239,7 +239,7 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
         $this->assertArrayHasKey('pending_reason', $privacyfields);
         $this->assertArrayHasKey('reason_code', $privacyfields);
         $this->assertArrayHasKey('payment_id', $privacyfields);
-        $this->assertArrayHasKey('parent_txn_id', $privacyfields);
+        $this->assertArrayHasKey('liqpay_order_id', $privacyfields);
         $this->assertArrayHasKey('payment_type', $privacyfields);
         $this->assertArrayHasKey('timeupdated', $privacyfields);
     }

@@ -122,10 +122,11 @@ $data->action            = $pdata->data['action'];   // pay - платеж , hol
                                                      // auth - предавторизация карты
 $data->payment_status   = $pdata->data['status'];    // "success" (go to www.liqpay.ua/documentation/api/callback for more)
 $data->payment_type     = $pdata->data['type'];      // payment type
+$data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
 
 $data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
 $data->reason_code      = $pdata->data['acq_id']; //TODO - fit DB
-$data->parent_txn_id    = $pdata->data['liqpay_order_id']; //TODO - fit DB
+
 
 $data->timeupdated      = time();
 //TODO: Need add fields:

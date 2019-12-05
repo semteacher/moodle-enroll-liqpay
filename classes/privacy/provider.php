@@ -91,7 +91,7 @@ class provider implements
                     'pending_reason'      => 'privacy:metadata:enrol_liqpay:enrol_liqpay:pending_reason',
                     'reason_code'         => 'privacy:metadata:enrol_liqpay:enrol_liqpay:reason_code',
                     'payment_id'          => 'privacy:metadata:enrol_liqpay:enrol_liqpay:payment_id',
-                    'parent_txn_id'       => 'privacy:metadata:enrol_liqpay:enrol_liqpay:parent_txn_id',
+                    'liqpay_order_id'     => 'privacy:metadata:enrol_liqpay:enrol_liqpay:liqpay_order_id',
                     'payment_type'        => 'privacy:metadata:enrol_liqpay:enrol_liqpay:payment_type',
                     'timeupdated'         => 'privacy:metadata:enrol_liqpay:enrol_liqpay:timeupdated'
                 ],
@@ -219,7 +219,7 @@ class provider implements
                 'pending_reason'      => $liqpayrecord->pending_reason,
                 'reason_code'         => $liqpayrecord->reason_code,
                 'payment_id'          => $liqpayrecord->payment_id,
-                'parent_txn_id'       => $liqpayrecord->parent_txn_id,
+                'liqpay_order_id'     => $liqpayrecord->liqpay_order_id,
                 'payment_type'        => $liqpayrecord->payment_type,
                 'timeupdated'         => \core_privacy\local\request\transform::datetime($liqpayrecord->timeupdated),
             ];
