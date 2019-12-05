@@ -211,7 +211,7 @@ class provider implements
                 'userid'              => $liqpayrecord->userid,
                 'description'         => $liqpayrecord->description,
                 'commission_credit'   => $liqpayrecord->commission_credit,
-                'option_name1'        => $liqpayrecord->option_name1,
+                'amount_debit'        => $liqpayrecord->amount_debit,
                 'option_selection1_x' => $liqpayrecord->option_selection1_x,
                 'option_name2'        => $liqpayrecord->option_name2,
                 'option_selection2_x' => $liqpayrecord->option_selection2_x,
