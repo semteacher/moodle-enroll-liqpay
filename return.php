@@ -119,13 +119,14 @@ $data->paytype           = $pdata->data['paytype'];  // card - оплата ка
 $data->action            = $pdata->data['action'];   // pay - платеж , hold - блокировка средств на счету отправителя,
                                                      // subscribe - регулярный платеж, paydonate - пожертвование, 
                                                      // auth - предавторизация карты
+$data->payment_status   = $pdata->data['status'];    // "success" (go to www.liqpay.ua/documentation/api/callback for more)
+$data->payment_type     = $pdata->data['type'];      // payment type
 
-$data->payment_status   = $pdata->data['status'];
 $data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
 $data->reason_code      = $pdata->data['acq_id']; //TODO - fit DB
 $data->txn_id           = $pdata->data['payment_id']; //==transaction_id
 $data->parent_txn_id    = $pdata->data['liqpay_order_id']; //TODO - fit DB
-$data->payment_type     = $pdata->data['type']; //TODO - fit DB
+
 $data->timeupdated      = time();
 //TODO: Need add fields:
 //create_date
