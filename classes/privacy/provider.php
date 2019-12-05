@@ -77,7 +77,9 @@ class provider implements
         $collection->add_database_table(
                 'enrol_liqpay',
                 [
+                    'publickey'           => 'privacy:metadata:enrol_liqpay:enrol_liqpay:publickey',
                     'business'            => 'privacy:metadata:enrol_liqpay:enrol_liqpay:business',
+                    'err_code'            => 'privacy:metadata:enrol_liqpay:enrol_liqpay:err_code',
                     'receiver_email'      => 'privacy:metadata:enrol_liqpay:enrol_liqpay:receiver_email',
                     'receiver_id'         => 'privacy:metadata:enrol_liqpay:enrol_liqpay:receiver_id',
                     'item_name'           => 'privacy:metadata:enrol_liqpay:enrol_liqpay:item_name',

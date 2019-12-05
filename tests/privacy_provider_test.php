@@ -225,7 +225,9 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
         $this->assertEquals('privacy:metadata:enrol_liqpay:enrol_liqpay', $table->get_summary());
 
         $privacyfields = $table->get_privacy_fields();
+        $this->assertArrayHasKey('publickey', $privacyfields);
         $this->assertArrayHasKey('business', $privacyfields);
+        $this->assertArrayHasKey('err_code', $privacyfields);
         $this->assertArrayHasKey('receiver_email', $privacyfields);
         $this->assertArrayHasKey('receiver_id', $privacyfields);
         $this->assertArrayHasKey('item_name', $privacyfields);

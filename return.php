@@ -126,11 +126,8 @@ $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal 
 $data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
 $data->end_date         = $pdata->data['end_date'];          // Transaction end date
 $data->create_date      = $pdata->data['create_date'];       // Transaction create date
+$data->err_code         = $pdata->data['err_code'];          // Transaction error code
 $data->timeupdated      = time();
-//TODO: Need add fields:
-//create_date
-//err_code
-//err_decription
 //---not in db?--
 $data->payment_gross    = $pdata->data['amount_debit'];
 $data->payment_currency = $pdata->data['currency_debit'];
