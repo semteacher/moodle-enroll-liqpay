@@ -124,23 +124,15 @@ $data->payment_status   = $pdata->data['status'];    // "success" (go to www.liq
 $data->payment_type     = $pdata->data['type'];              // payment type
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
 $data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
-
-$data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
-
-
-
+$data->end_date         = $pdata->data['end_date'];          // Transaction end date
 $data->timeupdated      = time();
 //TODO: Need add fields:
 //create_date
 //err_code
 //err_decription
 //---not in db?--
-//$data->payment_gross    = $pdata->data['amount_credit']; //xx_credit == receiver
-//$data->payment_currency = $pdata->data['currency_credit'];
 $data->payment_gross    = $pdata->data['amount_debit'];
 $data->payment_currency = $pdata->data['currency_debit'];
-
-
 
 var_dump($data);
 $user = $DB->get_record("user", array("id" => $data->userid), "*", MUST_EXIST);
@@ -202,7 +194,7 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         }
 
         // Use the queried course's full name for the item_name field.
-        $data->item_name = $course->fullname; //<FIELD NAME="item_name"
+        $data->item_name = $course->fullname;
 
         // ALL CLEAR !
 
