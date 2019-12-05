@@ -107,7 +107,8 @@ $data->publickey        = $public_key; //<FIELD NAME="publickey"
 $data->userid           = (int)$order_id[0];
 $data->courseid         = (int)$order_id[1];
 $data->instanceid       = (int)$order_id[2];
-$data->memo             = $pdata->data['description']; //TODO - fit DB
+$data->description      = $pdata->data['description'];
+
 $data->tax              = $pdata->data['commission_credit']; //TODO - fit DB
 $data->option_name1     = $pdata->data['amount_debit']; //TODO - fit DB
 $data->option_selection1_x = $pdata->data['currency_debit']; //TODO - fit DB

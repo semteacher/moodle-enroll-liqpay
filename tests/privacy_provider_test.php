@@ -232,7 +232,7 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
         $this->assertArrayHasKey('courseid', $privacyfields);
         $this->assertArrayHasKey('userid', $privacyfields);
         $this->assertArrayHasKey('instanceid', $privacyfields);
-        $this->assertArrayHasKey('memo', $privacyfields);
+        $this->assertArrayHasKey('description', $privacyfields);
         $this->assertArrayHasKey('tax', $privacyfields);
         $this->assertArrayHasKey('option_selection1_x', $privacyfields);
         $this->assertArrayHasKey('payment_status', $privacyfields);
