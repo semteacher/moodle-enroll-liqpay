@@ -238,7 +238,7 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
         $this->assertArrayHasKey('payment_status', $privacyfields);
         $this->assertArrayHasKey('pending_reason', $privacyfields);
         $this->assertArrayHasKey('reason_code', $privacyfields);
-        $this->assertArrayHasKey('txn_id', $privacyfields);
+        $this->assertArrayHasKey('payment_id', $privacyfields);
         $this->assertArrayHasKey('parent_txn_id', $privacyfields);
         $this->assertArrayHasKey('payment_type', $privacyfields);
         $this->assertArrayHasKey('timeupdated', $privacyfields);
@@ -370,7 +370,7 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
         $this->assertCount(2, $data->transactions);
         $this->assertEquals(
                 ['STUDENT2-IN-COURSE2-00', 'STUDENT2-IN-COURSE2-01'],
-                array_column($data->transactions, 'txn_id'),
+                array_column($data->transactions, 'payment_id'),
                 '', 0.0, 10, true
         );
     }
@@ -642,10 +642,10 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
      * @param   \stdClass   $course The course to associate with
      * @param   \stdClass   $user The user associated with the student
      * @param   \stdClass   $enrol The enrolment instance
-     * @param   String      $txnid The Paypal txnid to use
+     * @param   String      $payment_id The LiqPay payment_id to use
      * @param   int         $time The txn time
      */
-    protected function create_enrol_liqpay_record($business, $receiver, $course, $user, $enrol, $txnid, $time) {
+    protected function create_enrol_liqpay_record($business, $receiver, $course, $user, $enrol, $payment_id, $time) {
         global $DB;
 
         $liqpaydata = [
@@ -657,7 +657,7 @@ class enrol_liqpay_privacy_provider_testcase extends \core_privacy\tests\provide
             'userid'         => $user->id,
             'instanceid'     => $enrol->id,
             'payment_status' => 'Completed',
-            'txn_id'         => $txnid,
+            'payment_id'     => $payment_id,
             'payment_type'   => 'instant',
             'timeupdated'    => $time,
         ];

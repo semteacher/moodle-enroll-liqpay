@@ -104,6 +104,7 @@ var_dump($id);
 
 $data = new stdClass();
 $data->publickey         = $public_key;                      // receiver's ID: public_key
+$data->payment_id        = $pdata->data['payment_id'];       // ==transaction_id
 $data->userid            = (int)$order_id[0];
 $data->courseid          = (int)$order_id[1];
 $data->instanceid        = (int)$order_id[2];
@@ -124,7 +125,6 @@ $data->payment_type     = $pdata->data['type'];      // payment type
 
 $data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
 $data->reason_code      = $pdata->data['acq_id']; //TODO - fit DB
-$data->txn_id           = $pdata->data['payment_id']; //==transaction_id
 $data->parent_txn_id    = $pdata->data['liqpay_order_id']; //TODO - fit DB
 
 $data->timeupdated      = time();
@@ -167,8 +167,8 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         // At this point we only proceed with a status of completed or pending with a reason of echeck
 
         // Make sure this transaction doesn't exist already.
-        if ($existing = $DB->get_record("enrol_liqpay", array("txn_id" => $data->txn_id), "*", IGNORE_MULTIPLE)) {
-            \enrol_liqpay\util::message_liqpay_error_to_admin("Transaction $data->txn_id is being repeated!", $data);
+        if ($existing = $DB->get_record("enrol_liqpay", array("payment_id" => $data->payment_id), "*", IGNORE_MULTIPLE)) {
+            \enrol_liqpay\util::message_liqpay_error_to_admin("Transaction $data->payment_id is being repeated!", $data);
             die;
         }
 
