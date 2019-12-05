@@ -23,8 +23,10 @@
  */
 
 $string['assignrole'] = 'Assign role';
-$string['businessemail'] = 'PayPal business email';
-$string['businessemail_desc'] = 'The email address of your business PayPal account';
+$string['publickey'] = 'LiqPay public key';
+$string['publickey_desc'] = 'The public key of your business LiqPay account';
+$string['privatekey'] = 'LiqPay private key';
+$string['privatekey_desc'] = 'The private key of your business LiqPay account';
 $string['cost'] = 'Enrol cost';
 $string['costerror'] = 'The enrolment cost is not numeric';
 $string['costorkey'] = 'Please choose one of the following methods of enrolment.';
