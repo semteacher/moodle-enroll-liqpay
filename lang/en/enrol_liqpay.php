@@ -67,6 +67,7 @@ $string['privacy:metadata:enrol_liqpay:enrol_liqpay:liqpay_order_id'] = 'LiqPay 
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:payment_status'] = 'The status of the payment.';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:payment_type'] = 'Holds whether the payment was funded with an eCheck (echeck), or was funded with LiqPay balance, credit card, or instant transfer (instant).';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:end_date'] = 'Transaction end date.';
+$string['privacy:metadata:enrol_liqpay:enrol_liqpay:create_date'] = 'Transaction create date.';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:acq_id'] = 'An Equirer ID.';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:receiver_email'] = 'Primary email address of the payment recipient (that is, the merchant).';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay:receiver_id'] = 'Unique LiqPay account ID of the payment recipient (i.e., the merchant).';

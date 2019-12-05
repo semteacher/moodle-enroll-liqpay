@@ -125,6 +125,7 @@ $data->payment_type     = $pdata->data['type'];              // payment type
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
 $data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
 $data->end_date         = $pdata->data['end_date'];          // Transaction end date
+$data->create_date      = $pdata->data['create_date'];       // Transaction create date
 $data->timeupdated      = time();
 //TODO: Need add fields:
 //create_date
