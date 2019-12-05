@@ -214,7 +214,7 @@ class provider implements
                 'amount_debit'        => $liqpayrecord->amount_debit,
                 'currency_debit'      => $liqpayrecord->currency_debit,
                 'paytype'             => $liqpayrecord->paytype,
-                'option_selection2_x' => $liqpayrecord->option_selection2_x,
+                'action'              => $liqpayrecord->action,
                 'payment_status'      => $liqpayrecord->payment_status,
                 'pending_reason'      => $liqpayrecord->pending_reason,
                 'reason_code'         => $liqpayrecord->reason_code,
