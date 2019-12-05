@@ -121,11 +121,12 @@ $data->action            = $pdata->data['action'];   // pay - платеж , hol
                                                      // subscribe - регулярный платеж, paydonate - пожертвование, 
                                                      // auth - предавторизация карты
 $data->payment_status   = $pdata->data['status'];    // "success" (go to www.liqpay.ua/documentation/api/callback for more)
-$data->payment_type     = $pdata->data['type'];      // payment type
+$data->payment_type     = $pdata->data['type'];              // payment type
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
+$data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
 
 $data->pending_reason   = $pdata->data['end_date']; //TODO - fit DB
-$data->reason_code      = $pdata->data['acq_id']; //TODO - fit DB
+
 
 
 $data->timeupdated      = time();
