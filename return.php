@@ -118,6 +118,7 @@ $course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EX
 //$context = context_course::instance($course->id, MUST_EXIST);
 $context = context_course::instance($data->courseid, MUST_EXIST);
 $destination = "$CFG->wwwroot/course/view.php?id=$data->courseid";
+$fullname = format_string($course->fullname, true, array('context' => $context));
 
 $PAGE->set_context($context);
 
@@ -291,8 +292,6 @@ if (!empty($SESSION->wantsurl)) {
     $destination = $SESSION->wantsurl;
     unset($SESSION->wantsurl);
 }
-
-$fullname = format_string($course->fullname, true, array('context' => $context));
 
 if (is_enrolled($context, NULL, '', true)) {
     redirect($destination, get_string('paymentthanks', '', $fullname));
