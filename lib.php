@@ -20,7 +20,8 @@
  * This plugin allows you to set up paid courses.
  *
  * @package    enrol_liqpay
- * @copyright  2010 Eugene Venter
+ * @copyright  2010 Eugene Venter (PayPal)
+ * @copyright  2019 Andrii Semenets (LiqPay)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,14 +29,12 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * LiqPay enrolment plugin implementation.
- * @author  Eugene Venter - based on code by Martin Dougiamas and others
+ * @author  Eugene Venter (PayPal) and Andrii Semenets (LiqPay) - based on code by Martin Dougiamas and others
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class enrol_liqpay_plugin extends enrol_plugin {
 
     public function get_currencies() {
-        // See https://www.liqpay.com/cgi-bin/webscr?cmd=p/sell/mc/mc_intro-outside,
-        // 3-character ISO-4217: https://cms.liqpay.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_currency_codes
         $codes = array('UAH', 'EUR', 'USD', 'RUB');
         $currencies = array();
         foreach ($codes as $c) {
@@ -227,7 +226,7 @@ class enrol_liqpay_plugin extends enrol_plugin {
                                             'description'    => $userfullname.' for access to '.$coursefullname,
                                             'order_id'       => "{$USER->id}-{$course->id}-{$instance->id}-021",
                                             'version'        => '3',
-                                            'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php?id='.$course->id,
+                                            'result_url'     => $CFG->wwwroot.'/enrol/liqpay/return.php',
                                             'sender_first_name' => $userfirstname, 
                                             'sender_last_name'  => $userlastname
                                             ));
