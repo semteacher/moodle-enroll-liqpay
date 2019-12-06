@@ -88,14 +88,10 @@ $data->action           = $pdata->data['action'];   // pay - платеж , hold
                                                     // auth - предавторизация карты
 $data->payment_status   = $pdata->data['status'];   // "success" (go to www.liqpay.ua/documentation/api/callback for more)
 $data->publickey        = $public_key;                       // receiver's ID: public_key
-$data->payment_id       = $pdata->data['payment_id'];        // ==transaction_id
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
 $data->payment_type     = $pdata->data['type'];              // payment type
 $data->err_code         = !empty($pdata->data['err_code'])? $pdata->data['err_code'] : ''; // Transaction error code
 $data->timeupdated      = time();
-// PayPal code compability
-$data->payment_gross    = $data->amount_debit;
-$data->payment_currency = $data->currency_debit;
 
 var_dump($data);
 //$user = $DB->get_record("user", array("id" => $data->userid), "*", MUST_EXIST);
@@ -116,6 +112,7 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
     if ((strcmp($pdata->data["action"], "pay") == 0) && (strcmp($pdata->data["status"], "success") == 0)) { // VALID PAYMENT!
 
         // Fill rest of transaction data - only if more or less success
+        $data->payment_id       = $pdata->data['payment_id'];        // ==transaction_id
         $data->description       = $pdata->data['description'];
         $data->commission_credit = $pdata->data['commission_credit'];// commission from receiver
         $data->amount_debit      = $pdata->data['amount_debit'];     // payed by customer
@@ -128,6 +125,9 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
                                                             // masterpass - через кабинет masterpass, 
                                                             // moment_part - рассрочка, cash - наличными, 
                                                             // invoice - счет на e-mail, qr - сканирование qr-кода
+        // PayPal code compability
+        $data->payment_gross    = $data->amount_debit;
+        $data->payment_currency = $data->currency_debit;
 
         // If currency is incorrectly set then someone maybe trying to cheat the system
 
