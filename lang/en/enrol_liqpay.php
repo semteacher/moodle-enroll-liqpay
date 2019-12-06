@@ -98,3 +98,4 @@ $string['repeatedtransaction'] = 'LiqPay: transaction {$a} is being repeated!';
 $string['nouser'] = 'LiqPay: user {$a} doesn\'t exist';
 $string['nocourse'] = 'LiqPay: course $data->courseid doesn\'t exist';
 $string['paidnotenough'] = 'LiqPay: Amount paid is not enough {$a}';
+$string['unsuccesspayment'] = 'LiqPay: payment attempt was unsuccessfull. Try again!';

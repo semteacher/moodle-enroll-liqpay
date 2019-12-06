@@ -114,9 +114,10 @@ $data->payment_currency = $data->currency_debit;
 
 var_dump($data);
 //$user = $DB->get_record("user", array("id" => $data->userid), "*", MUST_EXIST);
-//$course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EXIST);
+$course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EXIST);
 //$context = context_course::instance($course->id, MUST_EXIST);
 $context = context_course::instance($data->courseid, MUST_EXIST);
+$destination = "$CFG->wwwroot/course/view.php?id=$data->courseid";
 
 $PAGE->set_context($context);
 
@@ -273,8 +274,13 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
             }
         }
     
-    } elseif (strcmp($pdata->data["status"], "success") == 0) {
-        
+    } elseif (strcmp($pdata->data["status"], "success") != 0) {
+        $PAGE->set_url($destination);
+        echo $OUTPUT->header();
+        $a = new stdClass();
+        $a->teacher = get_string('defaultcourseteacher');
+        $a->fullname = $fullname;
+        notice(get_string('unsuccesspayment', 'enrol_liqpay', $a), $destination);        
     }
 }
 
@@ -284,8 +290,6 @@ require_login();
 if (!empty($SESSION->wantsurl)) {
     $destination = $SESSION->wantsurl;
     unset($SESSION->wantsurl);
-} else {
-    $destination = "$CFG->wwwroot/course/view.php?id=$course->id";
 }
 
 $fullname = format_string($course->fullname, true, array('context' => $context));
