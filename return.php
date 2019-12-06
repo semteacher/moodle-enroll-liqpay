@@ -79,34 +79,19 @@ if (empty($order_id) || count($order_id) < 3) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid value of the request param: order_id');
 }
 
-//$id = required_param('id', PARAM_INT);
-//var_dump($id);
-
 $data = new stdClass();
-$data->publickey         = $public_key;                      // receiver's ID: public_key
-$data->payment_id        = $pdata->data['payment_id'];       // ==transaction_id
-$data->userid            = (int)$order_id[0];
-$data->courseid          = (int)$order_id[1];
-$data->instanceid        = (int)$order_id[2];
-$data->description       = $pdata->data['description'];
-$data->commission_credit = $pdata->data['commission_credit'];// commission from receiver
-$data->amount_debit      = $pdata->data['amount_debit'];     // payed by customer
-$data->currency_debit    = $pdata->data['currency_debit'];   // currency of customer's payment
-$data->paytype           = $pdata->data['paytype'];  // card - оплата картой, liqpay - через кабинет liqpay,
-                                                     // privat24 - через кабинет приват24, 
-                                                     // masterpass - через кабинет masterpass, 
-                                                     // moment_part - рассрочка, cash - наличными, 
-                                                     // invoice - счет на e-mail, qr - сканирование qr-кода
-$data->action            = $pdata->data['action'];   // pay - платеж , hold - блокировка средств на счету отправителя,
-                                                     // subscribe - регулярный платеж, paydonate - пожертвование, 
-                                                     // auth - предавторизация карты
-$data->payment_status   = $pdata->data['status'];    // "success" (go to www.liqpay.ua/documentation/api/callback for more)
-$data->payment_type     = $pdata->data['type'];              // payment type
+$data->userid           = (int)$order_id[0];
+$data->courseid         = (int)$order_id[1];
+$data->instanceid       = (int)$order_id[2];
+$data->action           = $pdata->data['action'];   // pay - платеж , hold - блокировка средств на счету отправителя,
+                                                    // subscribe - регулярный платеж, paydonate - пожертвование, 
+                                                    // auth - предавторизация карты
+$data->payment_status   = $pdata->data['status'];   // "success" (go to www.liqpay.ua/documentation/api/callback for more)
+$data->publickey        = $public_key;                       // receiver's ID: public_key
+$data->payment_id       = $pdata->data['payment_id'];        // ==transaction_id
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
-$data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
-$data->end_date         = $pdata->data['end_date'];          // Transaction end date
-$data->create_date      = $pdata->data['create_date'];       // Transaction create date
-$data->err_code         = $pdata->data['err_code'];          // Transaction error code
+$data->payment_type     = $pdata->data['type'];              // payment type
+$data->err_code         = !empty($pdata->data['err_code'])? $pdata->data['err_code'] : ''; // Transaction error code
 $data->timeupdated      = time();
 // PayPal code compability
 $data->payment_gross    = $data->amount_debit;
@@ -129,6 +114,20 @@ $plugin = enrol_get_plugin('liqpay');
 
 if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)) {
     if ((strcmp($pdata->data["action"], "pay") == 0) && (strcmp($pdata->data["status"], "success") == 0)) { // VALID PAYMENT!
+
+        // Fill rest of transaction data - only if more or less success
+        $data->description       = $pdata->data['description'];
+        $data->commission_credit = $pdata->data['commission_credit'];// commission from receiver
+        $data->amount_debit      = $pdata->data['amount_debit'];     // payed by customer
+        $data->currency_debit    = $pdata->data['currency_debit'];   // currency of customer's payment
+        $data->acq_id           = $pdata->data['acq_id'];            // An Equirer ID
+        $data->end_date         = $pdata->data['end_date'];          // Transaction end date
+        $data->create_date      = $pdata->data['create_date'];       // Transaction create date
+        $data->paytype           = $pdata->data['paytype']; // card - оплата картой, liqpay - через кабинет liqpay,
+                                                            // privat24 - через кабинет приват24, 
+                                                            // masterpass - через кабинет masterpass, 
+                                                            // moment_part - рассрочка, cash - наличными, 
+                                                            // invoice - счет на e-mail, qr - сканирование qr-кода
 
         // If currency is incorrectly set then someone maybe trying to cheat the system
 
