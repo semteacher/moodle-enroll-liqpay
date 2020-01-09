@@ -30,9 +30,6 @@ if (!enrol_is_enabled('liqpay')) {
     http_response_code(503);
     throw new moodle_exception('errdisabled', 'enrol_liqpay');
 }
-$f = fopen("post.txt", "w");
-fwrite($f, print_r($_POST, true));
-fclose($f);
 
 /// Keep out casual intruders
 if (empty($_POST)) {
@@ -49,7 +46,6 @@ foreach ($_POST as $key => $value) {
     if ($key !== clean_param($key, PARAM_ALPHANUMEXT)) {
         throw new moodle_exception('invalidrequest', 'core_error', '', null, $key);
     }
-    //$data->$key = fix_utf8($value);
     $pdata->$key = $value;
 }
 
@@ -59,20 +55,11 @@ if (empty($pdata->data) || empty($pdata->signature)) {
 
 $localsign = base64_encode( sha1( $private_key . $pdata->data . $private_key , 1 ));
 $pdata->data = $liqpay->decode_params($pdata->data);
-$sign = $liqpay->cnb_signature($pdata->data);
-var_dump('original signature:');
-var_dump($pdata->signature);
-var_dump('sign:');
-var_dump($sign);
-var_dump('localsign:');
-var_dump($localsign);
-// TODO: verification of signature does not pass?? contact LiqPay support?
+
+// verification if signature does passed or not
 if ($localsign != $pdata->signature) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
 }
-
-var_dump('json decoded data:');
-var_dump($pdata->data);
 
 if (empty($pdata->data['order_id'])) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Missing request param: order_id');
