@@ -67,7 +67,7 @@ var_dump($sign);
 var_dump('localsign:');
 var_dump($localsign);
 // TODO: verification of signature does not pass?? contact LiqPay support?
-if ($localsign != $data->signature) {
+if ($localsign != $pdata->signature) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
 }
 
