@@ -57,14 +57,19 @@ if (empty($pdata->data) || empty($pdata->signature)) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Missing LiqPay data or signature');
 }
 
+$localsign = base64_encode( sha1( $private_key . $pdata->data . $private_key , 1 ));
 $pdata->data = $liqpay->decode_params($pdata->data);
 $sign = $liqpay->cnb_signature($pdata->data);
-//$reencoded = base64_encode(json_encode($pdata->data));
+var_dump('original signature:');
+var_dump($pdata->signature);
+var_dump('sign:');
 var_dump($sign);
+var_dump('localsign:');
+var_dump($localsign);
 // TODO: verification of signature does not pass?? contact LiqPay support?
-//if ($sign != $data->signature) {
-//    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
-//}
+if ($localsign != $data->signature) {
+    throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid signature!');
+}
 
 var_dump('json decoded data:');
 var_dump($pdata->data);
