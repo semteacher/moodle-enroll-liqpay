@@ -274,13 +274,15 @@ var_dump($pdata);
             $data->end_date          = $pdata->data['end_date'];          // Transaction end date
             $data->create_date       = $pdata->data['create_date'];       // Transaction create date
             $data->paytype           = $pdata->data['paytype'];
+            $data->item_name         = $course->fullname;
             $DB->insert_record("enrol_liqpay", $data);
         }
         $PAGE->set_url($destination);
+        $PAGE->set_course($course);
+        $PAGE->set_title($course->fullname);
+        $PAGE->set_heading($course->fullname);
+        $PAGE->set_context($context);
         echo $OUTPUT->header();
-        $a = new stdClass();var_dump($pdata);
-        $a->teacher = get_string('defaultcourseteacher');
-        $a->fullname = $fullname;
         notice(get_string('unsuccesspayment', 'enrol_liqpay', $data->err_code), $destination);        
     }
 }
@@ -297,6 +299,10 @@ if (is_enrolled($context, NULL, '', true)) {
     redirect($destination, get_string('paymentthanks', '', $fullname));
 } else {   /// Somehow they aren't enrolled yet!  :-(
     $PAGE->set_url($destination);
+    $PAGE->set_course($course);
+    $PAGE->set_title($course->fullname);
+    $PAGE->set_heading($course->fullname);
+    $PAGE->set_context($context);
     echo $OUTPUT->header();
     $a = new stdClass();
     $a->teacher = get_string('defaultcourseteacher');
