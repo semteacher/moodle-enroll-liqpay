@@ -83,6 +83,7 @@ $data->publickey        = $public_key;                       // receiver's ID: p
 $data->liqpay_order_id  = $pdata->data['liqpay_order_id'];   // LiqPay internal order_id
 $data->payment_type     = $pdata->data['type'];              // payment type
 $data->err_code         = !empty($pdata->data['err_code'])? $pdata->data['err_code'] : ''; // Transaction error code
+$data->description      = $pdata->data['description'];
 $data->timeupdated      = time();
 
 $course = $DB->get_record("course", array("id" => $data->courseid), "*", MUST_EXIST);
@@ -99,10 +100,9 @@ $plugin = enrol_get_plugin('liqpay');
 
 if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)) {
     if ((strcmp($pdata->data["action"], "pay") == 0) && (strcmp($pdata->data["status"], "success") == 0)) { // VALID PAYMENT!
-
+var_dump($pdata);
         // Fill rest of transaction data - only if more or less success
         $data->payment_id        = $pdata->data['payment_id'];        // ==transaction_id
-        $data->description       = $pdata->data['description'];
         $data->commission_credit = $pdata->data['commission_credit']; // commission from receiver
         $data->amount_debit      = $pdata->data['amount_debit'];      // payed by customer
         $data->currency_debit    = $pdata->data['currency_debit'];    // currency of customer's payment
@@ -264,12 +264,24 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         }
     
     } elseif (strcmp($pdata->data["status"], "success") != 0) {
+        if (strcmp($pdata->data["err_code"], "cancel") != 0) {
+            // Fill rest of transaction data - for discovering of errors (but not canceled by user)
+            $data->payment_id        = $pdata->data['payment_id'];        // ==transaction_id
+            $data->commission_credit = 0;
+            $data->amount_debit      = 0;
+            $data->currency_debit    = $pdata->data['currency_debit'];    // currency of customer's payment
+            $data->acq_id            = $pdata->data['acq_id'];            // An Equirer ID
+            $data->end_date          = $pdata->data['end_date'];          // Transaction end date
+            $data->create_date       = $pdata->data['create_date'];       // Transaction create date
+            $data->paytype           = $pdata->data['paytype'];
+            $DB->insert_record("enrol_liqpay", $data);
+        }
         $PAGE->set_url($destination);
         echo $OUTPUT->header();
-        $a = new stdClass();
+        $a = new stdClass();var_dump($pdata);
         $a->teacher = get_string('defaultcourseteacher');
         $a->fullname = $fullname;
-        notice(get_string('unsuccesspayment', 'enrol_liqpay', $a), $destination);        
+        notice(get_string('unsuccesspayment', 'enrol_liqpay', $data->err_code), $destination);        
     }
 }
 
