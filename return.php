@@ -103,9 +103,14 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
 
         // Fill rest of transaction data - only if more or less success
         $data->payment_id        = $pdata->data['payment_id'];        // ==transaction_id
+        $data->amount            = $pdata->data['amount'];            // ==course's price
+        $data->currency          = $pdata->data['currency'];          // ==currency of price
+        $data->amount_credit     = $pdata->data['amount_credit'];     // reveived by seller (receiver)
+        $data->currency_credit   = $pdata->data['currency_credit'];   // currency of receiver's account
         $data->commission_credit = $pdata->data['commission_credit']; // commission from receiver
         $data->amount_debit      = $pdata->data['amount_debit'];      // payed by customer
         $data->currency_debit    = $pdata->data['currency_debit'];    // currency of customer's payment
+        $data->commission_debit  = $pdata->data['commission_debit'];  // commission from customer
         $data->acq_id            = $pdata->data['acq_id'];            // An Equirer ID
         $data->end_date          = $pdata->data['end_date'];          // Transaction end date
         $data->create_date       = $pdata->data['create_date'];       // Transaction create date
@@ -115,17 +120,17 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
                                                             // moment_part - рассрочка, cash - наличными, 
                                                             // invoice - счет на e-mail, qr - сканирование qr-кода
         // PayPal code compability
-        $data->payment_gross    = $data->amount_debit;
-        $data->payment_currency = $data->currency_debit;
+        $data->payment_gross    = $data->amount_credit;
+        $data->payment_currency = $data->currency_credit;
 
         // If currency is incorrectly set then someone maybe trying to cheat the system
 
-        if ($pdata->data['currency_debit'] != $plugin_instance->currency) {
+        if ($pdata->data['currency_credit'] != $plugin_instance->currency) {
             \enrol_liqpay\util::message_liqpay_error_to_admin(
-                get_string('currencydoesnotmatch', 'enrol_liqpay', $data->currency_debit),
+                get_string('currencydoesnotmatch', 'enrol_liqpay', $data->currency_credit),
                 $data);
             //die;
-            redirect($CFG->wwwroot, get_string('currencydoesnotmatch', 'enrol_liqpay', $data->currency_debit));
+            redirect($CFG->wwwroot, get_string('currencydoesnotmatch', 'enrol_liqpay', $data->currency_credit));
         }
 
         // At this point we only proceed with a status of completed or pending with a reason of echeck
@@ -166,7 +171,8 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
                 get_string('paidnotenough', 'enrol_liqpay', "($data->payment_gross < $cost)"), 
                 $data);
             //die;
-            redirect($CFG->wwwroot, get_string('paidnotenough', 'enrol_liqpay', "($data->payment_gross < $cost)"));
+            redirect($CFG->wwwroot, 
+                get_string('paidnotenough', 'enrol_liqpay', "($data->payment_gross ($data->payment_currency) < $cost)"));
         }
 
         // Use the queried course's full name for the item_name field.
@@ -267,9 +273,14 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         if (strcmp($pdata->data["err_code"], "cancel") != 0) {
             // Fill rest of transaction data - for discovering of errors (but not canceled by user)
             $data->payment_id        = $pdata->data['payment_id'];        // ==transaction_id
-            $data->commission_credit = 0;
-            $data->amount_debit      = 0;
+            $data->amount            = $pdata->data['amount'];            // ==course's price
+            $data->currency          = $pdata->data['currency'];          // ==currency of price
+            $data->amount_credit     = 0;                                 // reveived by seller (receiver)
+            $data->currency_credit   = $pdata->data['currency_credit'];   // currency of receiver's account
+            $data->commission_credit = 0;                                 // commission from receiver
+            $data->amount_debit      = 0;                                 // payed by customer
             $data->currency_debit    = $pdata->data['currency_debit'];    // currency of customer's payment
+            $data->commission_debit  = 0;                                 // commission from customer
             $data->acq_id            = $pdata->data['acq_id'];            // An Equirer ID
             $data->end_date          = $pdata->data['end_date'];          // Transaction end date
             $data->create_date       = $pdata->data['create_date'];       // Transaction create date
