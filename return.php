@@ -100,7 +100,7 @@ $plugin = enrol_get_plugin('liqpay');
 
 if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)) {
     if ((strcmp($pdata->data["action"], "pay") == 0) && (strcmp($pdata->data["status"], "success") == 0)) { // VALID PAYMENT!
-var_dump($pdata);
+
         // Fill rest of transaction data - only if more or less success
         $data->payment_id        = $pdata->data['payment_id'];        // ==transaction_id
         $data->commission_credit = $pdata->data['commission_credit']; // commission from receiver
