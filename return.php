@@ -180,7 +180,7 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
 
         // ALL CLEAR !
 
-        $DB->insert_record("enrol_liqpay", $data);
+        $liqpayid = $DB->insert_record("enrol_liqpay", $data);
 
         if ($plugin_instance->enrolperiod) {
             $timestart = time();
@@ -192,6 +192,11 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
 
         // Enrol user
         $plugin->enrol_user($plugin_instance, $user->id, $plugin_instance->roleid, $timestart, $timeend);
+        
+        // get enrollmentid
+        if ($enrollmentid = $DB->get_field('user_enrolments', 'id', array('enrolid'=>$data->instanceid, 'userid'=>$data->userid))) {
+            $DB->set_field('enrol_liqpay', 'userenrollmentid', $enrollmentid, array('id' => $liqpayid));
+        }
 
         // Pass $view=true to filter hidden caps if the user cannot see them
         if ($users = get_users_by_capability($context, 'moodle/course:update', 'u.*', 'u.id ASC',
