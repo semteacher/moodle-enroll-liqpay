@@ -88,4 +88,28 @@ final class util {
             exit(0);
         };
     }
+
+    /**
+     * Suspend / activate user enrolment.
+     *
+     * @return boolean - is successfull
+     */
+    public static function update_user_enrolmen($courseid, $userid, $state)
+    {
+        global $DB;
+        
+        $coursecontext = \context_course::instance($courseid);
+        if (has_capability('enrol/liqpay:unenrol', $coursecontext) || has_capability('enrol/liqpay:unenrolself', $coursecontext)){ // only admin and managers allowed to manage over other users
+            if ($DB->record_exists('enrol', array('courseid' => $courseid, 'enrol' => 'liqpay', 'status' => ENROL_INSTANCE_ENABLED))){
+                $enrol = $DB->get_record('enrol', array('courseid' => $courseid, 'enrol' => 'liqpay', 'status' => ENROL_INSTANCE_ENABLED), '*', MUST_EXIST);
+                $plugin = enrol_get_plugin('liqpay');
+                $plugin->update_user_enrol($enrol, $userid, $state);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
