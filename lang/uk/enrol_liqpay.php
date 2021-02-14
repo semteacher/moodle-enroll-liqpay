@@ -15,47 +15,47 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'enrol_liqpay', language 'en'.
+ * Strings for component 'enrol_liqpay', language 'uk'.
  *
  * @package    enrol_liqpay
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['assignrole'] = 'Assign role';
+$string['assignrole'] = 'Надати роль';
 $string['publickey'] = 'LiqPay public key';
 $string['publickey_desc'] = 'The public key of your business LiqPay account';
 $string['privatekey'] = 'LiqPay private key';
 $string['privatekey_desc'] = 'The private key of your business LiqPay account';
-$string['cost'] = 'Enrol cost';
-$string['costerror'] = 'The enrolment cost is not numeric';
-$string['costorkey'] = 'Please choose one of the following methods of enrolment.';
-$string['currency'] = 'Currency';
-$string['defaultrole'] = 'Default role assignment';
-$string['defaultrole_desc'] = 'Select role which should be assigned to users during LiqPay enrolments';
-$string['enrolenddate'] = 'End date';
-$string['enrolenddate_help'] = 'If enabled, users can be enrolled until this date only.';
-$string['enrolenddaterror'] = 'Enrolment end date cannot be earlier than start date';
-$string['enrolperiod'] = 'Enrolment duration';
-$string['enrolperiod_desc'] = 'Default length of time that the enrolment is valid. If set to zero, the enrolment duration will be unlimited by default.';
+$string['cost'] = 'Вартість зарахування';
+$string['costerror'] = 'Вартість зарахування не є числом';
+$string['costorkey'] = 'Будь-ласа, виберіть один з наступних методів зарахування на курс.';
+$string['currency'] = 'Валюта';
+$string['defaultrole'] = 'Роль по-замовчуванню';
+$string['defaultrole_desc'] = 'Виберіть роль що буде надана користувачу під час зарахування засобами LiqPay';
+$string['enrolenddate'] = 'Кінцева дата';
+$string['enrolenddate_help'] = 'Якщо увімкнено, користувачі можуть бути зараховані лише до цієї дати';
+$string['enrolenddaterror'] = 'Кінцева дата зарахування не може бути раніше початкової дати';
+$string['enrolperiod'] = 'Тривальість зарахування';
+$string['enrolperiod_desc'] = 'Тривальість по-замовчуванню, впродовж якого зарахування є дійсним. Якщо вказано нуль - немає обмеження тривалості зарахування.';
 $string['enrolperiod_help'] = 'Length of time that the enrolment is valid, starting with the moment the user is enrolled. If disabled, the enrolment duration will be unlimited.';
-$string['enrolstartdate'] = 'Start date';
-$string['enrolstartdate_help'] = 'If enabled, users can be enrolled from this date onward only.';
+$string['enrolstartdate'] = 'Дата початку';
+$string['enrolstartdate_help'] = 'Якщо увімкнено - користувачі можуть бути зараховані лише починаючи з вказаної дати.';
 $string['errdisabled'] = 'The LiqPay enrolment plugin is disabled and does not handle payment notifications.';
-$string['erripninvalid'] = 'Instant payment notification has not been verified by LiqPay.';
-$string['errliqpayconnect'] = 'Could not connect to {$a->url} to verify the instant payment notification: {$a->result}';
-$string['expiredaction'] = 'Enrolment expiry action';
+$string['erripninvalid'] = 'Повідомлення про миттєві полати не були верифіковані LiqPay.';
+$string['errliqpayconnect'] = 'Неможлиов зєднатися з {$a->url} щоб перевірити статус миттєвої оплати : {$a->result}';
+$string['expiredaction'] = 'Дія якщо термін зарахування добігає кінця';
 $string['expiredaction_help'] = 'Select action to carry out when user enrolment expires. Please note that some user data and settings are purged from course during course unenrolment.';
-$string['mailadmins'] = 'Notify admin';
-$string['mailstudents'] = 'Notify students';
-$string['mailteachers'] = 'Notify teachers';
-$string['messageprovider:liqpay_enrolment'] = 'LiqPay enrolment messages';
-$string['nocost'] = 'There is no cost associated with enrolling in this course!';
-$string['liqpay:config'] = 'Configure LiqPay enrol instances';
-$string['liqpay:manage'] = 'Manage enrolled users';
-$string['liqpay:unenrol'] = 'Unenrol users from course';
-$string['liqpay:unenrolself'] = 'Unenrol self from the course';
-$string['liqpayaccepted'] = 'LiqPay payments accepted';
+$string['mailadmins'] = 'Повідомити адміна';
+$string['mailstudents'] = 'Повідомити студентів';
+$string['mailteachers'] = 'Повідомити викладачів';
+$string['messageprovider:liqpay_enrolment'] = 'Повідомлення про зарахування через LiqPay';
+$string['nocost'] = 'Не вказано вартість зарахування в цьому курсі!';
+$string['liqpay:config'] = 'Налаштувати зарахування через LiqPay';
+$string['liqpay:manage'] = 'Керування зарахованими користувачами';
+$string['liqpay:unenrol'] = 'Відрахувати користувачів з курсу';
+$string['liqpay:unenrolself'] = 'Відрахувати себе з курсу';
+$string['liqpayaccepted'] = 'LiqPay платіж зараховано';
 $string['pluginname'] = 'LiqPay';
 $string['pluginname_desc'] = 'The LiqPay module allows you to set up paid courses.  If the cost for any course is zero, then students are not asked to pay for entry.  There is a site-wide cost that you set here as a default for the whole site and then a course setting that you can set for each course individually. The course cost overrides the site cost.';
 $string['privacy:metadata:enrol_liqpay:enrol_liqpay'] = 'Information about the LiqPay transactions for LiqPay enrolments.';
@@ -88,14 +88,14 @@ $string['privacy:metadata:enrol_liqpay:liqpay_com:first_name'] = 'First name of 
 $string['privacy:metadata:enrol_liqpay:liqpay_com:last_name'] = 'Last name of the user who is buying the course.';
 $string['privacy:metadata:enrol_liqpay:liqpay_com:os0'] = 'Full name of the buyer.';
 $string['processexpirationstask'] = 'LiqPay enrolment send expiry notifications task';
-$string['sendpaymentbutton'] = 'Send payment via LiqPay';
-$string['status'] = 'Allow LiqPay enrolments';
+$string['sendpaymentbutton'] = 'Надіслати оплату через LiqPay';
+$string['status'] = 'Дозволити зарахування через LiqPay';
 $string['status_desc'] = 'Allow users to use LiqPay to enrol into a course by default.';
-$string['transactions'] = 'LiqPay transactions';
-$string['unenrolselfconfirm'] = 'Do you really want to unenrol yourself from course "{$a}"?';
+$string['transactions'] = 'Транзакції LiqPay';
+$string['unenrolselfconfirm'] = 'Чи ви дійсно бажаєте відрахувати себе з курсу "{$a}"?';
 $string['currencydoesnotmatch'] = 'LiqPay: currency does not match course settings, received (currency_debit): "{$a}"';
-$string['repeatedtransaction'] = 'LiqPay: transaction {$a} is being repeated!';
-$string['nouser'] = 'LiqPay: user {$a} doesn\'t exist';
-$string['nocourse'] = 'LiqPay: course {$a} doesn\'t exist';
-$string['paidnotenough'] = 'LiqPay: Amount paid is not enough {$a}';
-$string['unsuccesspayment'] = 'LiqPay: payment attempt was unsuccessfull. Reason: {$a} Try again!';
+$string['repeatedtransaction'] = 'LiqPay: транзакцію {$a} буде повторено!';
+$string['nouser'] = 'LiqPay: користувач {$a} не існує';
+$string['nocourse'] = 'LiqPay: курс {$a} не існує';
+$string['paidnotenough'] = 'LiqPay: Оплачена сума є недостатньою {$a}';
+$string['unsuccesspayment'] = 'LiqPay: спроба оплати була неуспішною. Підстава: {$a} Спробуйте ще раз!';
