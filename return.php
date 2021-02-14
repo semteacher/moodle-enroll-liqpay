@@ -71,6 +71,10 @@ if (empty($order_id) || count($order_id) < 3) {
     throw new moodle_exception('invalidrequest', 'core_error', '', null, 'Invalid value of the request param: order_id');
 }
 
+// date fixing
+if (empty($pdata->data['create_date'])) {$pdata->data['create_date']= time();}
+if (empty($pdata->data['end_date'])) {$pdata->data['end_date']= $pdata->data['create_date'];}
+
 $data = new stdClass();
 $data->userid           = (int)$order_id[0];
 $data->courseid         = (int)$order_id[1];

@@ -25,6 +25,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2020020314;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2018111200;        // Requires this Moodle version
+$plugin->version   = 2020020315;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2016111200;        // Requires this Moodle version
 $plugin->component = 'enrol_liqpay';    // Full name of the plugin (used for diagnostics)
