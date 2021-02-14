@@ -303,7 +303,7 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         $PAGE->set_heading($course->fullname);
         $PAGE->set_context($context);
         echo $OUTPUT->header();
-        notice(get_string('unsuccesspayment', 'enrol_liqpay', $data->err_code), $destination);        
+        notice(get_string('unsuccesspayment', 'enrol_liqpay', $data->payment_status.' - '.$data->err_code), $destination);        
     }
 }
 
