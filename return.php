@@ -128,8 +128,8 @@ if ((strlen($pdata->data["action"]) > 0) && (strlen($pdata->data["status"]) > 0)
         $data->payment_currency = $data->currency_credit;
 
         // If currency is incorrectly set then someone maybe trying to cheat the system
-
-        if ($pdata->data['currency_credit'] != $plugin_instance->currency) {
+        // if ($pdata->data['currency'] != $plugin_instance->currency) { // Merchant account No need to mutch currency - potential problems!!
+        if ($pdata->data['currency_credit'] != $plugin_instance->currency) { // Merchant account must match currency
             \enrol_liqpay\util::message_liqpay_error_to_admin(
                 get_string('currencydoesnotmatch', 'enrol_liqpay', $data->currency_credit),
                 $data);
